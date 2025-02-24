@@ -1,0 +1,181 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+
+\usepackage[T1]{fontenc}
+\usepackage[font=footnotesize,labelfont=bf]{caption}
+\usepackage{color}
+\usepackage{graphicx}
+%\usepackage{subfigure}
+%\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{booktabs,array}
+\usepackage{etoolbox}
+\usepackage{import}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage{fullpage}
+\usepackage{url}
+
+\newenvironment{exercise}[2][Task]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{demo}[2][Demo]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newcommand{\cv}{\mathbf{c}}
+\newcommand{\xv}{\mathbf{x}}
+\newcommand{\tv}{\mathbf{t}}
+\newcommand{\pv}{\mathbf{p}}
+\newcommand{\Km}{\mathbf{K}}
+\newcommand{\Tm}{\mathbf{T}}
+\newcommand{\Rm}{\mathbf{R}}
+\newcommand{\Mm}{\mathbf{M}}
+\newcommand{\IIm}{\mathbf{I}}
+\newcommand{\Wm}{\mathbf{W}}
+\newcommand{\Pm}{\mathbf{P}}
+\newcommand{\zerov}{\mathbf{0}}
+\DeclareMathOperator{\atan2}{atan2}
+\DeclareMathOperator{\trace}{trace}
+%\renewcommand{\thesection}{}% Remove section references...
+%\renewcommand{\thesubsection}{\arabic{subsection}}%... from subsections
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{DATA.ML.300 Computer Vision\\ Exercise Round 7}
+\date{\vspace{-5mm} February, 2025}
+%\author{The Author}
+\date{} % Activate to display a given date or no date (if empty),
+% otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+%\section{First section}
+
+%Your text goes here.
+\noindent For these exercises, you will need Python. Submit all your answers and figures included in
+a PDF file. In addition, submit runnable .py files, where you have filled in your codes to
+the given template files. Do not copy all the code from these Python files into the PDF file.
+\newline
+
+\noindent All submissions should be uploaded to Moodle. Exercise points will be granted after a
+teaching assistant has reviewed your answers. Submissions made before the deadline can
+earn up to 4 points. After the deadline, no partial points will be awarded; only submis-
+sions with fully correct solutions to all tasks will receive 1 point.
+\newline
+
+%\vspace{2.5mm}
+
+\begin{exercise}{1} Structure from motion ambiguity. (Pen \& Paper) (1 points)
+\vspace{1mm}
+
+  \noindent How does ambiguity arise in structure from motion?
+  Illustrate with an equation or a verbal explanation.
+  \textit{(Hint projective transformation of world point onto an image plane. See lecture slides.)}
+
+  \noindent \textbf{Include your answer in your PDF.}
+
+\end{exercise}
+
+\begin{exercise}{2} Fundamental matrix estimation. (Programming exercise) (1.5 points)
+	
+	\vspace{1mm}
+	\noindent See the comments in \texttt{Fmatrix\_example.py} and implement the two missing functions:
+	\begin{itemize}
+		\item[\textit{a)}] Implement the eight-point algorithm in \texttt{estimateF.py}. The algorithm is described below and in the lecture slides.
+		\vspace{1mm}
+		
+		Let's denote $\mathbf{x}=(u,v,1)^\top$ and $\mathbf{x}'=(u',v',1)^\top$.
+		
+		The eight-point algorithm can be implemented by solving the following homogeneous linear system:
+		
+		\begin{equation*}
+		\small		
+		(u'u, u'v, u', v'u, v'v, v',u, v, 1)
+		\begin{pmatrix} f_{11} \\ f_{12} \\f_{13} \\f_{21} \\f_{22} \\f_{23} \\f_{31} \\f_{32} \\f_{33} \\ \end{pmatrix} = 0
+		\end{equation*}
+		
+		This solution is then enforced rank-2 constraint by taking SVD and then reconstructing using only the two largest singular values.
+		
+		\item[\textit{b)}] Implement the missing denormalization used in normalized eight-point algorithm in \texttt{estimateFnorm.py}. If $\mathbf{T}$ and $\mathbf{T}'$ are the normalizing transformations in the
+		two images, the fundamental matrix in original
+		coordinates is $\mathbf{T}'^\top\mathbf{F}\mathbf{T}$
+	\end{itemize}
+	
+	\noindent The epipolar lines obtained with both F-matrix estimates should be close to those visualized by the example script. 
+
+ \noindent \textbf{Include the output image in your PDF, and return also your runnable versions
+of \texttt{estimateF.py} and \texttt{estimateFnorm.py}.}
+\end{exercise}
+
+\begin{exercise}{3}
+	Two-view structure from motion. (Programming exercise) (1.5 points)
+	
+	\vspace{1mm}
+	\noindent In this exercise you will estimate the fundamental matrix for a pair of uncalibrated images and recover a pair of camera projection matrices that are compatible with the estimated fundamental matrix. Thereafter, triangulation of point correspondences using the aforementioned projection matrices gives a projective reconstruction of the scene, which is visualized in the example script.
+	
+	\vspace{1mm}
+	\noindent Run the script \texttt{two\_view\_structure\_from\_motion\_example.py} and proceed as follows (do the tasks and answer the questions):
+	\begin{itemize}
+		\item[\textit{a)}] The first part of the code calibrates the cameras using known dimensions of the shelf and visualizes a wireframe model of the shelf projected onto the images. Your task is to use the calibrated camera matrices to project the 3D points to the images (see comments in the code). How are the cameras calibrated here?
+		
+		\item[\textit{b)}] The second part triangulates and visualizes a projective reconstruction of the wireframe model. Give an explanation why the model looks distorted but is anyway correct. (See the discussion in the lecture slides.)
+		\item[\textit{c)}] In the third part, you should project the distorted wireframe model onto the two images and check that it matches the outlines of the book shelf. 
+		
+		\item[\textit{d)}] Finally, describe what kind of information could be used to upgrade the projective reconstruction to a similarity reconstruction, where the angles and ratios of lengths are the same as in the real one, without knowing the dimensions of the book shelf. (Hint: See lecture slides.)
+	\end{itemize}
+
+  \noindent \textbf{Include both your answers and the output images in your PDF, and return also your runnable version
+of \texttt{two\_view\_structure\_from\_motion\_example.py}.}
+\end{exercise}
+
+\end{document}
